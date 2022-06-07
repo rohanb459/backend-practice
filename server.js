@@ -3,11 +3,27 @@
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
+const _ = require("lodash");
+
+
 
 const server = http.createServer((req, res)=>{
     console.log('request has been made from browser to server');
     // console.log(req.method);
     // console.log(req.url);
+
+
+    //lodash
+    let num = _.random(0,100);
+    console.log(num);
+
+    let greet=_.once(()=>{
+        console.log('hello');
+    })
+
+    greet();
+    greet();
+
 
     res.setHeader('Content-Type', 'text/html');
     // res.write('<h1>Hello, Pepcoders! :)</h1>');
