@@ -1,6 +1,7 @@
 const express = require("express");
 const { min } = require("lodash");
 const mongoose = require("mongoose");
+const emailValidator = require("email-validator");
 const app = express();
 
 app.use(express.json());
@@ -148,16 +149,23 @@ const userSchema = mongoose.Schema({
     email:{
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        validate: function(){
+            return emailValidator.validate(this.email);
+        }
     },
     password:{
         type: String,
         required: true,
-        min:10
+        minLength:10
     },
     consfirmPassword:{
         type:String,
-        required: true
+        required: true,
+        minLength:10,
+        validate:function(){
+            return this.consfirmPassword == this.password;
+        }
     }
 
 });
@@ -169,6 +177,10 @@ userSchema.pre("save", function(){
 userSchema.post("save", function(doc){
     console.log('after saving in db', doc);
 });
+
+userSchema.pre('save', function(){
+    this.consfirmPassword=undefined;
+})
 
 const userModel=mongoose.model('userModel', userSchema);
 
