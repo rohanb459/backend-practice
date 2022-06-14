@@ -1,28 +1,29 @@
 const express = require("express");
+const { min } = require("lodash");
 const mongoose = require("mongoose");
 const app = express();
 
 app.use(express.json());
 app.listen(5000);
 
-let users= [
-    {
-      id: 1,
-      name: "Rohan",
-    },
-    {
-      id: 2,
-      name: "Vishakha",
-    },
-    {
-      id: 3,
-      name: "Shreya",
-    },
-    {
-      id: 4,
-      name: "Sakshi",
-    },
-  ];
+// let users= [
+//     {
+//       id: 1,
+//       name: "Rohan",
+//     },
+//     {
+//       id: 2,
+//       name: "Vishakha",
+//     },
+//     {
+//       id: 3,
+//       name: "Shreya",
+//     },
+//     {
+//       id: 4,
+//       name: "Sakshi",
+//     },
+//   ];
 
   
 //mini app
@@ -35,7 +36,7 @@ app.use("/auth", authRouter);
 
 userRouter
 .route("/")
-.get(getUser)
+.get(getUsers)
 .post(postUser)
 .patch(updateUser)
 .delete(deleteUser);
@@ -47,9 +48,13 @@ authRouter
 .get(getSignUp)
 .post(postSignUp);
 
-function getUser(req,res)
+async function getUsers(req,res)
 {
-    res.send(users);
+    // res.send(users);
+    let allUsers = await userModel.find();
+
+    res.json({message: "list of all users",
+    data: allUsers});
 }
 
 function postUser(req,res)
@@ -63,22 +68,27 @@ function postUser(req,res)
     })
 }
 
-function deleteUser(req,res)
+async function deleteUser(req,res)
 {
-    users={};
+    // users={};
+    let dataToBeDelete=req.body;
+    let user = await userModel.findOneAndDelete(dataToBeDelete);
     res.json({
-        message: "data has been deleted"
+        message: "data has been deleted",
+        data: user
     })
 }
 
-function updateUser(req,res)
+async function updateUser(req,res)
 {
     console.log("req.body->", req.body);
     let dataToBeUpdated=req.body;
-    for(key in dataToBeUpdated)
-    {
-        users[key]=dataToBeUpdated[key];
-    }
+    let user = await userModel.findOneAndUpdate({email:'abc@gmail.com'}, dataToBeUpdated);
+
+    // for(key in dataToBeUpdated)
+    // {
+    //     users[key]=dataToBeUpdated[key];
+    // }
 
     res.json({
         message: "data updated successfully"
@@ -109,13 +119,15 @@ function getSignUp(req,res)
     res.sendFile('/public/index.html', {root: __dirname});
 }
 
-function postSignUp(req,res)
+async function postSignUp(req,res)
 {
-    let obj=req.body;
-    console.log("backend->", obj);
+    let dataObj=req.body;
+    // console.log("backend->", obj);
+    let user=await userModel.create(dataObj);
+    console.log('backend', user);
     res.json({
         message: "user signed up",
-        data:obj
+        data: user
     });
 }
 
@@ -140,7 +152,8 @@ const userSchema = mongoose.Schema({
     },
     password:{
         type: String,
-        required: true
+        required: true,
+        min:10
     },
     consfirmPassword:{
         type:String,
@@ -151,14 +164,14 @@ const userSchema = mongoose.Schema({
 
 const userModel=mongoose.model('userModel', userSchema);
 
-(async function createUser()
-{
-    let user={
-        name: "bhatia", 
-        email: "abc1@.com", 
-        password: "123456789",
-        consfirmPassword: "123456789"
-    };
-    let data = await userModel.create(user);
-    console.log(data);
-})();
+// (async function createUser()
+// {
+//     let user={
+//         name: "bhatia", 
+//         email: "abc1@.com", 
+//         password: "123456789",
+//         consfirmPassword: "123456789"
+//     };
+//     let data = await userModel.create(user);
+//     console.log(data);
+// })();
