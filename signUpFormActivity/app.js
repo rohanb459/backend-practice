@@ -4,9 +4,11 @@ const mongoose = require("mongoose");
 const emailValidator = require("email-validator");
 const userModel=require("./models/userModel");
 const bcrypt = require("bcrypt");
+const cookieParser=require("cookie-parser");
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser());
 app.listen(5000);
 
 // let users= [
@@ -43,6 +45,17 @@ userRouter
 .post(postUser)
 .patch(updateUser)
 .delete(deleteUser);
+
+
+userRouter
+.route("/getCookies")
+.get(getCookies);
+
+
+userRouter
+.route("/setCookies")
+.get(setCookies);
+
 
 userRouter.route("/:id").get(getUserById);
 
@@ -132,6 +145,19 @@ async function postSignUp(req,res)
         message: "user signed up",
         data: user
     });
+}
+
+function setCookies(req, res){
+    // res.setHeader('Set-Cookie', 'isLoggedIn=true');
+    res.cookie('isLoggedIn', true, {maxAge: 1000*60*60*24, secure:true, httpOnly: true});
+    res.send('cookes has been set');
+}
+
+function getCookies(req,res)
+{
+    let cookies=req.cookies;
+    console.log(cookies);
+    res.send('cookies received');
 }
 
 // const db_link='mongodb+srv://admin:v7owLvq06TEtGTaD@cluster0.bvg1dkr.mongodb.net/?retryWrites=true&w=majority';
