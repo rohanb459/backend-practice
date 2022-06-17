@@ -2,6 +2,8 @@ const express = require("express");
 const { min } = require("lodash");
 const mongoose = require("mongoose");
 const emailValidator = require("email-validator");
+const userModel=require("./models/userModel");
+const bcrypt = require("bcrypt");
 const app = express();
 
 app.use(express.json());
@@ -132,57 +134,57 @@ async function postSignUp(req,res)
     });
 }
 
-const db_link='mongodb+srv://admin:v7owLvq06TEtGTaD@cluster0.bvg1dkr.mongodb.net/?retryWrites=true&w=majority';
-mongoose.connect(db_link)
-.then(function(db){
-    console.log(db);
-    console.log('db connected');
-}).catch(function(err){
-    console.log(err);
-})
+// const db_link='mongodb+srv://admin:v7owLvq06TEtGTaD@cluster0.bvg1dkr.mongodb.net/?retryWrites=true&w=majority';
+// mongoose.connect(db_link)
+// .then(function(db){
+//     console.log(db);
+//     console.log('db connected');
+// }).catch(function(err){
+//     console.log(err);
+// })
 
-const userSchema = mongoose.Schema({
-    name:{
-        type: String,
-        required: true
-    }, 
-    email:{
-        type: String,
-        required: true,
-        unique: true,
-        validate: function(){
-            return emailValidator.validate(this.email);
-        }
-    },
-    password:{
-        type: String,
-        required: true,
-        minLength:10
-    },
-    consfirmPassword:{
-        type:String,
-        required: true,
-        minLength:10,
-        validate:function(){
-            return this.consfirmPassword == this.password;
-        }
-    }
+// const userSchema = mongoose.Schema({
+//     name:{
+//         type: String,
+//         required: true
+//     }, 
+//     email:{
+//         type: String,
+//         required: true,
+//         unique: true,
+//         validate: function(){
+//             return emailValidator.validate(this.email);
+//         }
+//     },
+//     password:{
+//         type: String,
+//         required: true,
+//         minLength:10
+//     },
+//     consfirmPassword:{
+//         type:String,
+//         required: true,
+//         minLength:10,
+//         validate:function(){
+//             return this.consfirmPassword == this.password;
+//         }
+//     }
 
-});
+// });
 
-userSchema.pre("save", function(){
-    console.log('before saving in db');
-});
+// userSchema.pre("save", function(){
+//     console.log('before saving in db');
+// });
 
-userSchema.post("save", function(doc){
-    console.log('after saving in db', doc);
-});
+// userSchema.post("save", function(doc){
+//     console.log('after saving in db', doc);
+// });
 
-userSchema.pre('save', function(){
-    this.consfirmPassword=undefined;
-})
+// userSchema.pre('save', function(){
+// this.consfirmPassword=undefined;
+// })
 
-const userModel=mongoose.model('userModel', userSchema);
+// const userModel=mongoose.model('userModel', userSchema);
 
 // (async function createUser()
 // {
