@@ -47,10 +47,10 @@ userSchema.pre('save', function(){
 this.consfirmPassword=undefined;
 })
 
-userSchema.pre('save', async function(){
-    let salt= await bcrypt.genSalt();
-    let hashedString = await bcrypt.hash(this.password, salt);
-    this.password=hashedString;
-})
+// userSchema.pre('save', async function(){
+//     let salt= await bcrypt.genSalt();
+//     let hashedString = await bcrypt.hash(this.password, salt);
+//     this.password=hashedString;
+// })
 const userModel=mongoose.model('userModel', userSchema);
 module.exports=userModel;
