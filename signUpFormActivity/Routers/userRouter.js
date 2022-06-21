@@ -1,13 +1,15 @@
 const express = require("express");
+const app = express();
 const mongoose = require("mongoose");
 const userRouter = express.Router();
-app.use(cookieParser());
+const userModel=require("../models/userModel");
 const cookieParser=require("cookie-parser");
 
+app.use(cookieParser());
 
 userRouter
 .route("/")
-.get(getUsers)
+.get(protectRoute, getUsers)
 .post(postUser)
 .patch(updateUser)
 .delete(deleteUser);
@@ -102,6 +104,20 @@ function getCookies(req,res)
     let cookies=req.cookies;
     console.log(cookies);
     res.send('cookies received');
+}
+
+function protectRoute(req,res, next)
+{
+    if(req.cookies.isLoggedIn)
+    {
+        next();
+    }
+    else
+    {
+        return res.json({
+            message: 'user Operation not allowed'
+        })
+    }
 }
 
 module.exports=userRouter;

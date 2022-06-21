@@ -1,7 +1,9 @@
 const express = require("express");
-const userModel=require("./models/userModel");
+const userModel=require("../models/userModel");
 const mongoose = require("mongoose");
 const authRouter = express.Router();
+const jwt_Key = 'sf24ionvjr35sfoigj78afia4o';
+const jwt = require('jsonwebtoken');
 
 authRouter
 .route("/signup")
@@ -40,6 +42,9 @@ async function loginUser(req, res)
         if(user)
         {   // bcrypt -> compare
             if(user.password==data.password){
+                let uid=user['_id'];
+                let jwt = jwt.sign({payload: uid}, jwt_Key);
+                res.cookie('isLoggedIn', token, {httpOnly: true});
                 return res.json({
                 message: "User has Logged in",
                 userDetails: data
