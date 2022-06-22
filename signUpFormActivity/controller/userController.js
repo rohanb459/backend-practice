@@ -1,4 +1,6 @@
-async function getUsers(req,res)
+const userModel = require('../models/userModel');
+
+module.exports.getUsers = async function getUsers(req,res)
 {
     // res.send(users);
     let allUsers = await userModel.find();
@@ -7,7 +9,7 @@ async function getUsers(req,res)
     data: allUsers});
 }
 
-function postUser(req,res)
+module.exports.postUser = function postUser(req,res)
 {
     console.log(req.body);
     users=req.body;
@@ -18,7 +20,7 @@ function postUser(req,res)
     })
 }
 
-async function deleteUser(req,res)
+module.exports.deleteUser = async function deleteUser(req,res)
 {
     // users={};
     let dataToBeDelete=req.body;
@@ -29,7 +31,7 @@ async function deleteUser(req,res)
     })
 }
 
-async function updateUser(req,res)
+module.exports.updateUser = async function updateUser(req,res)
 {
     console.log("req.body->", req.body);
     let dataToBeUpdated=req.body;
@@ -45,7 +47,7 @@ async function updateUser(req,res)
     })
 }
 
-function getUserById(req,res)
+module.exports.getUserById = function getUserById(req,res)
 {
     console.log(req.params.id);
     let paramId = req.params.id;
@@ -77,7 +79,7 @@ function getUserById(req,res)
 //     res.send('cookies received');
 // }
 
-function protectRoute(req,res, next)
+module.exports.protectRoute = function protectRoute(req,res, next)
 {
     if(req.cookies.isLoggedIn)
     {

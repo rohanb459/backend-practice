@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const userRouter = express.Router();
 const userModel=require("../models/userModel");
 const cookieParser=require("cookie-parser");
-
+const {getUsers, getUserById, updateUser, deleteUser, postUser}=require('../controller/userController');
 app.use(cookieParser());
 
 userRouter
