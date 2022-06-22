@@ -6,8 +6,17 @@ function protectRoute(req, res, next)
 {
     if(req.cookies.login)
     {
-        let isVerified = jwt.verify(jwt, jwt_Key);
-        next();
+        console.log(req.cookies);
+        let isVerified = jwt.verify(req.cookies.login, jwt_Key);
+        if(isVerified)
+        {
+            next();
+        }
+        else{
+            return res.json({
+                message: 'user not verified'
+            })
+        }
     }
     else{
         return res.json({
@@ -15,3 +24,5 @@ function protectRoute(req, res, next)
         });
     }
 }
+
+module.exports=protectRoute;

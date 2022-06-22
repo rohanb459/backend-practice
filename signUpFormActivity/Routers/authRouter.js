@@ -43,7 +43,7 @@ async function loginUser(req, res)
         {   // bcrypt -> compare
             if(user.password==data.password){
                 let uid=user['_id'];
-                let jwt = jwt.sign({payload: uid}, jwt_Key);
+                let token = jwt.sign({payload: uid}, jwt_Key);
                 res.cookie('isLoggedIn', token, {httpOnly: true});
                 return res.json({
                 message: "User has Logged in",
